@@ -5,8 +5,10 @@ from .views import logout_user as base_logout
 from .views import room_edit as base_room_edit
 from .views import room_delete as base_room_delete
 from .views import login_page as base_login_page
+from .views import register_page as base_register_page
 
 urlpatterns = [
+    path('register/', base_register_page, name='base_register_page'),
     path('logout/', base_logout, name='base_logout'),
     path('login/', base_login_page, name='base_login_page'),
     path('', base_home, name="base_home"),
