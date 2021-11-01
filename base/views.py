@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import Room, Topic, User
+from .models import Room, Topic, User, Message
 from .forms import roomForm
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect
@@ -11,7 +11,6 @@ from django.contrib.auth.decorators import login_required
 
 
 def login_page(request):
-
     page = 'login'
 
     if request.user.is_authenticated:
@@ -87,7 +86,26 @@ def home(request):
 def room(request, pk):
     rooms = Room.objects.all()
     room_for_html = rooms.get(id=pk)
-    return render(request, 'room.html', context={'room': room_for_html})
+
+    room_messages = room_for_html.message_set.all().order_by('-created')
+    participants = room_for_html.participants.all()
+
+    if request.method == "POST":
+        new_message = Message.objects.create(
+            user=request.user,
+            room=room_for_html,
+            body=request.POST.get('body')
+        )
+        room_for_html.participants.add(request.user)
+        return redirect('base_room', pk=pk)
+
+    context = {
+        'room': room_for_html,
+        'room_messages': room_messages,
+        'participants': participants
+    }
+
+    return render(request, 'room.html', context=context)
 
 
 @login_required(login_url='base_login_page')
@@ -135,3 +153,17 @@ def room_delete(request, pk):
         return redirect('base_home')
 
     return render(request, 'room_delete.html', context={'form': form})
+
+
+@login_required(login_url='base_login_page')
+def message_delete(request, pk):
+    message_instance = Message.objects.get(id=pk)
+
+    if request.user != message_instance.user:
+        return HttpResponse("You are not allowed to do that.")
+
+    if request.method == 'POST':
+        message_instance.delete()
+        return redirect('base_home')
+
+    return render(request, 'room_delete.html', context={'obj': message_instance})
