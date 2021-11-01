@@ -1,6 +1,6 @@
 <div>
     {% for room in rooms %}
-        <span>@{{ room.host.username }}</span>
+        <a href="{% url 'base_user_profile_page' room.host.id %}">@{{ room.host.username }}</a>
         <a href="{% url 'base_room' room.id %}"><h3>{{ room.id }} -- {{ room.name }}</h3></a>
         <small>{{ room.topic.name }}</small><br>
         {% if request.user == room.user %}

@@ -2,7 +2,7 @@
 <hr>
 {% for message in recent_messages %}
     <div>
-        <small>@{{ message.user }} {{ message.created|timesince }}</small>
+        <small><a href="{% url 'base_user_profile_page' message.user.id %}">@{{ message.user }}</a> {{ message.created|timesince }}</small>
         <small>Replied to "{{ message.room }}"</small>
 
         <p>{{ message }}</p>
