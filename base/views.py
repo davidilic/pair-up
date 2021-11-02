@@ -133,7 +133,9 @@ def room_form(request):
     if request.method == 'POST':
         form = roomForm(request.POST)
         if form.is_valid():
-            form.save()
+            room_instance = form.save(commit=False)
+            room_instance.host = request.user
+            room_instance.save()
             return redirect('base_home')
     context = {'form': form}
     return render(request, 'room_form.html', context)
@@ -144,7 +146,7 @@ def room_edit(request, pk):
     room_ = Room.objects.get(id=pk)
     form = roomForm(instance=room_)
 
-    if request.user != room_.user:
+    if request.user != room_.host:
         return HttpResponse("You are not allowed to do that.")
 
     if request.method == 'POST':
@@ -163,7 +165,7 @@ def room_delete(request, pk):
     room_instance = Room.objects.get(id=pk)
     form = roomForm(instance=room_instance)
 
-    if request.user != room_instance.user:
+    if request.user != room_instance.host:
         return HttpResponse("You are not allowed to do that.")
 
     if request.method == 'POST':
