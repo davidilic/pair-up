@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from .forms import userForm as UserForm
 
 
 def login_page(request):
@@ -54,6 +55,10 @@ def register_page(request):
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
+            new_user = authenticate(username=form.cleaned_data['username'],
+                                    password=form.cleaned_data['password1'],
+                                    )
+            login(request, new_user)
             return redirect('base_home')
         else:
             messages.error(request, "An error occurred during registration.")
@@ -71,7 +76,7 @@ def home(request):
     )
 
     room_count = rooms.count()
-    topics = Topic.objects.all()
+    topics = Topic.objects.all()[0:5]
 
     recent_messages = Message.objects.filter(Q(room__topic__name__icontains=q))
 
@@ -191,7 +196,7 @@ def room_delete(request, pk):
         room_instance.delete()
         return redirect('base_home')
 
-    return render(request, 'room_delete.html', context={'form': form})
+    return render(request, 'delete.html', context={'form': form})
 
 
 @login_required(login_url='base_login_page')
@@ -205,4 +210,37 @@ def message_delete(request, pk):
         message_instance.delete()
         return redirect('base_home')
 
-    return render(request, 'room_delete.html', context={'obj': message_instance})
+    return render(request, 'delete.html', context={'obj': message_instance})
+
+
+@login_required(login_url='base_login_page')
+def update_user(request):
+    user = request.user
+    form = UserForm(instance=user)
+
+    if request.method == 'POST':
+        form = UserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('base_user_profile_page', pk=user.id)
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'update_user.html', context)
+
+def topics_page(request):
+    q = request.GET.get('q') if request.GET.get('q') is not None else ''
+    topics = Topic.objects.filter(name__icontains=q)
+
+    context = {'topics':topics}
+
+    return render(request, 'topics.html', context)
+
+def activity_page(request):
+    room_messages = Message.objects.all()
+
+    context = {'room_messages': room_messages}
+
+    return render(request, 'activity.html', context)
