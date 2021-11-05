@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'deletion.apps.DeletionConfig',
     'activity.apps.ActivityConfig',
+    'topics.apps.TopicsConfig',
 
     'rest_framework',
     'corsheaders',

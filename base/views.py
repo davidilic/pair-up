@@ -204,16 +204,3 @@ def update_user(request):
     }
 
     return render(request, 'update_user.html', context)
-
-
-def topics_page(request):
-    q = request.GET.get('q') if request.GET.get('q') is not None else ''
-    topics = Topic.objects.filter(name__icontains=q)
-    rooms = Room.objects.all()
-
-    context = {
-        'topics': topics,
-        'rooms': rooms
-    }
-
-    return render(request, 'topics.html', context)

@@ -36,7 +36,7 @@
 
                     <ul class="topics__list">
                         <li>
-                            <a href="{% url 'base_topics_page' %}" class="active">All <span>{{ rooms.count }}</span></a>
+                            <a href="{% url 'topics_page' %}" class="active">All <span>{{ rooms.count }}</span></a>
                         </li>
                         {% for topic in topics %}
                             <li>

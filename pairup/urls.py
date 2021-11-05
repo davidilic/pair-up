@@ -9,6 +9,7 @@ urlpatterns = [
     path('', include('base.urls')),
     path('delete/', include('deletion.urls')),
     path('activity/', include('activity.urls')),
+    path('topics/', include('topics.urls')),
     path('api/', include('api.urls')),
 ]
 
