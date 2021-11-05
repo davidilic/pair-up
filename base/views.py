@@ -3,12 +3,10 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Room, Topic, User, Message
-from .forms import roomForm
-from django.contrib.auth.forms import UserCreationForm
+from .forms import RoomForm, NewUserCreationForm, UserForm
 from django.shortcuts import redirect
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-from .forms import userForm as UserForm
 
 
 def login_page(request):
@@ -18,15 +16,15 @@ def login_page(request):
         return redirect('base_home')
 
     if request.method == 'POST':
-        username = request.POST.get('username').lower()
+        email = request.POST.get('email').lower()
         password = request.POST.get('password')
 
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(email=email)
         except:
             messages.error(request, "User does not exist")
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
 
         if user is not None:
             login(request, user)
@@ -44,21 +42,18 @@ def logout_user(request):
 
 
 def register_page(request):
-    form = UserCreationForm()
+    form = NewUserCreationForm()
     context = {
         'form': form
     }
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = NewUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
-            new_user = authenticate(username=form.cleaned_data['username'],
-                                    password=form.cleaned_data['password1'],
-                                    )
-            login(request, new_user)
+            login(request, user)
             return redirect('base_home')
         else:
             messages.error(request, "An error occurred during registration.")
@@ -133,7 +128,7 @@ def user_profile_page(request, pk):
 
 @login_required(login_url='base_login_page')
 def room_form(request):
-    form = roomForm()
+    form = RoomForm()
     topics = Topic.objects.all()
 
     if request.method == 'POST':
@@ -159,7 +154,7 @@ def room_form(request):
 @login_required(login_url='base_login_page')
 def room_edit(request, pk):
     room_ = Room.objects.get(id=pk)
-    form = roomForm(instance=room_)
+    form = RoomForm(instance=room_)
     topics = Topic.objects.all()
 
     if request.user != room_.host:
@@ -179,7 +174,7 @@ def room_edit(request, pk):
         'form': form,
         'topics': topics,
         'room': room_
-               }
+    }
 
     return render(request, 'room_form.html', context)
 
@@ -187,7 +182,7 @@ def room_edit(request, pk):
 @login_required(login_url='base_login_page')
 def room_delete(request, pk):
     room_instance = Room.objects.get(id=pk)
-    form = roomForm(instance=room_instance)
+    form = RoomForm(instance=room_instance)
 
     if request.user != room_instance.host:
         return HttpResponse("You are not allowed to do that.")
@@ -219,7 +214,7 @@ def update_user(request):
     form = UserForm(instance=user)
 
     if request.method == 'POST':
-        form = UserForm(request.POST, instance=user)
+        form = UserForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
             return redirect('base_user_profile_page', pk=user.id)
@@ -230,13 +225,15 @@ def update_user(request):
 
     return render(request, 'update_user.html', context)
 
+
 def topics_page(request):
     q = request.GET.get('q') if request.GET.get('q') is not None else ''
     topics = Topic.objects.filter(name__icontains=q)
 
-    context = {'topics':topics}
+    context = {'topics': topics}
 
     return render(request, 'topics.html', context)
+
 
 def activity_page(request):
     room_messages = Message.objects.all()
