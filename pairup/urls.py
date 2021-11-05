@@ -10,6 +10,7 @@ urlpatterns = [
     path('delete/', include('deletion.urls')),
     path('activity/', include('activity.urls')),
     path('topics/', include('topics.urls')),
+    path('rooms/', include('rooms.urls')),
     path('api/', include('api.urls')),
 ]
 

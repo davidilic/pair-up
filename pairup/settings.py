@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'deletion.apps.DeletionConfig',
     'activity.apps.ActivityConfig',
     'topics.apps.TopicsConfig',
+    'rooms.apps.RoomsConfig',
 
     'rest_framework',
     'corsheaders',

@@ -36,6 +36,6 @@ def delete_message(request, pk):
     if request.method == 'POST':
         room_id = message_instance.room_id
         message_instance.delete()
-        return redirect('base_room', room_id)
+        return redirect('rooms_room', room_id)
 
     return render(request, '../templates/delete.html', context={'obj': message_instance})

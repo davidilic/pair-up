@@ -29,7 +29,7 @@
                 {% endif %}
             </div>
             <div class="activities__boxContent">
-                <p>replied to post <a href="{% url 'base_room' message.room.id %}">"{{ message.room.name }}"</a></p>
+                <p>replied to post <a href="{% url 'rooms_room' message.room.id %}">"{{ message.room.name }}"</a></p>
                 <div class="activities__boxRoomContent">
                     {{ message }}
                 </div>
