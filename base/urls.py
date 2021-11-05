@@ -1,16 +1,17 @@
 from django.urls import path
-from .views import home as base_home, room as base_room
-from .views import room_form as base_room_form
-from .views import logout_user as base_logout
-from .views import room_edit as base_room_edit
-from .views import room_delete as base_room_delete
-from .views import login_page as base_login_page
-from .views import register_page as base_register_page
-from .views import message_delete as base_message_delete
-from .views import user_profile_page as base_user_profile_page
-from .views import update_user as base_update_user
-from .views import topics_page as base_topics_page
+
 from .views import activity_page as base_activity_page
+from .views import home as base_home, room as base_room
+from .views import login_page as base_login_page
+from .views import logout_user as base_logout
+from .views import message_delete as base_message_delete
+from .views import register_page as base_register_page
+from .views import room_delete as base_room_delete
+from .views import room_edit as base_room_edit
+from .views import room_form as base_room_form
+from .views import topics_page as base_topics_page
+from .views import update_user as base_update_user
+from .views import user_profile_page as base_user_profile_page
 
 urlpatterns = [
     path('register/', base_register_page, name='base_register_page'),

@@ -1,12 +1,13 @@
-from django.http import HttpResponse
-from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import Room, Topic, User, Message
-from .forms import RoomForm, NewUserCreationForm, UserForm
-from django.shortcuts import redirect
-from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.shortcuts import render
+
+from .forms import RoomForm, NewUserCreationForm, UserForm
+from .models import Room, Topic, User, Message
 
 
 def login_page(request):
@@ -243,7 +244,7 @@ def topics_page(request):
     context = {
         'topics': topics,
         'rooms': rooms
-               }
+    }
 
     return render(request, 'topics.html', context)
 

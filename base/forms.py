@@ -1,6 +1,7 @@
-from django.forms.models import ModelForm
-from .models import Room, User
 from django.contrib.auth.forms import UserCreationForm
+from django.forms.models import ModelForm
+
+from .models import Room, User
 
 
 class NewUserCreationForm(UserCreationForm):

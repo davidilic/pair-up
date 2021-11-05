@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import User, Room, Message, Topic
 
 admin.site.register(User)
