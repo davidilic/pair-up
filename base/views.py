@@ -73,7 +73,7 @@ def home(request):
     room_count = rooms.count()
     topics = Topic.objects.all()[0:5]
 
-    recent_messages = Message.objects.filter(Q(room__topic__name__icontains=q))
+    recent_messages = Message.objects.filter(Q(room__topic__name__icontains=q))[0:5]
 
     context = {
         'rooms': rooms,
@@ -89,15 +89,23 @@ def room(request, pk):
     rooms = Room.objects.all()
     room_for_html = rooms.get(id=pk)
 
-    room_messages = room_for_html.message_set.all().order_by('-created')
+    room_messages = room_for_html.message_set.all().order_by('created')
     participants = room_for_html.participants.all()
 
     if request.method == "POST":
-        new_message = Message.objects.create(
+
+        message_body = request.POST.get('body')
+
+        if len(message_body) > 4000:
+            messages.error(request, "Message too long.")
+            return redirect('base_room', pk=pk)
+
+        Message.objects.create(
             user=request.user,
             room=room_for_html,
-            body=request.POST.get('body')
+            body=message_body
         )
+
         room_for_html.participants.add(request.user)
         return redirect('base_room', pk=pk)
 
@@ -114,7 +122,7 @@ def user_profile_page(request, pk):
     user = User.objects.get(id=pk)
     rooms = user.room_set.all()
     recent_messages = user.message_set.all()
-    topics = Topic.objects.all()
+    topics = Topic.objects.filter(room__host_id=user.id)
 
     context = {
         'user': user,
@@ -202,8 +210,9 @@ def message_delete(request, pk):
         return HttpResponse("You are not allowed to do that.")
 
     if request.method == 'POST':
+        room_id = message_instance.room_id
         message_instance.delete()
-        return redirect('base_home')
+        return redirect('base_room', room_id)
 
     return render(request, 'delete.html', context={'obj': message_instance})
 
@@ -229,8 +238,12 @@ def update_user(request):
 def topics_page(request):
     q = request.GET.get('q') if request.GET.get('q') is not None else ''
     topics = Topic.objects.filter(name__icontains=q)
+    rooms = Room.objects.all()
 
-    context = {'topics': topics}
+    context = {
+        'topics': topics,
+        'rooms': rooms
+               }
 
     return render(request, 'topics.html', context)
 

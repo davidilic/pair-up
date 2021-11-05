@@ -23,11 +23,13 @@
           <!-- Logged In -->
             {% if request.user.is_authenticated %}
               <div class="header__user">
-                <a href="{% url 'base_update_user' %}">
                   <div class="avatar avatar--medium active">
                     <img src="{{ request.user.avatar.url }}" />
                   </div>
-                  <p>{{ request.user.username }} <span>@{{ request.user.username }}</span></p>
+                  <p>
+                      <a href="{% url 'base_user_profile_page' request.user.id %}"> <span>{{ request.user.name }}</span></a>
+                      <a href="{% url 'base_update_user' %}"><span>@{{ request.user.username }}</span></p>
+
                 </a>
                 <button class="dropdown-button">
                   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
