@@ -34,7 +34,7 @@ def login_page(request):
             messages.error(request, "Username or password does not exist")
 
     context = {'page': page}
-    return render(request, 'login_register.html', context=context)
+    return render(request, 'user_login_register.html', context=context)
 
 
 def logout_user(request):
@@ -59,7 +59,7 @@ def register_page(request):
         else:
             messages.error(request, "An error occurred during registration.")
 
-    return render(request, 'login_register.html', context)
+    return render(request, 'user_login_register.html', context)
 
 
 def home(request):
@@ -99,7 +99,7 @@ def user_profile_page(request, pk):
         'topics': topics
     }
 
-    return render(request, 'profile.html', context)
+    return render(request, 'user_profile.html', context)
 
 
 @login_required(login_url='base_login_page')
@@ -117,4 +117,4 @@ def update_user(request):
         'form': form
     }
 
-    return render(request, 'update_user.html', context)
+    return render(request, 'user_update.html', context)
