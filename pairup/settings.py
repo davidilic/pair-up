@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 
     'base.apps.BaseConfig',
     'api.apps.ApiConfig',
+    'deletion.apps.DeletionConfig',
 
     'rest_framework',
     'corsheaders',

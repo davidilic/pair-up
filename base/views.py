@@ -189,36 +189,6 @@ def room_edit(request, pk):
 
 
 @login_required(login_url='base_login_page')
-def room_delete(request, pk):
-    room_instance = Room.objects.get(id=pk)
-    form = RoomForm(instance=room_instance)
-
-    if request.user != room_instance.host:
-        return HttpResponse("You are not allowed to do that.")
-
-    if request.method == 'POST':
-        room_instance.delete()
-        return redirect('base_home')
-
-    return render(request, 'delete.html', context={'form': form})
-
-
-@login_required(login_url='base_login_page')
-def message_delete(request, pk):
-    message_instance = Message.objects.get(id=pk)
-
-    if request.user != message_instance.user:
-        return HttpResponse("You are not allowed to do that.")
-
-    if request.method == 'POST':
-        room_id = message_instance.room_id
-        message_instance.delete()
-        return redirect('base_room', room_id)
-
-    return render(request, 'delete.html', context={'obj': message_instance})
-
-
-@login_required(login_url='base_login_page')
 def update_user(request):
     user = request.user
     form = UserForm(instance=user)
