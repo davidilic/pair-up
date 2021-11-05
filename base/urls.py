@@ -1,6 +1,5 @@
 from django.urls import path
 
-from .views import activity_page as base_activity_page
 from .views import home as base_home, room as base_room
 from .views import login_page as base_login_page
 from .views import logout_user as base_logout
@@ -22,5 +21,4 @@ urlpatterns = [
     path('profile/<str:pk>/', base_user_profile_page, name="base_user_profile_page"),
     path('update_user/', base_update_user, name="base_update_user"),
     path('topics/', base_topics_page, name="base_topics_page"),
-    path('activity/', base_activity_page, name="base_activity_page"),
 ]
