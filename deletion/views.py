@@ -38,4 +38,4 @@ def delete_message(request, pk):
         message_instance.delete()
         return redirect('base_room', room_id)
 
-    return render(request, 'delete.html', context={'obj': message_instance})
+    return render(request, '../templates/delete.html', context={'obj': message_instance})
