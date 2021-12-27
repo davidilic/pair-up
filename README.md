@@ -14,6 +14,8 @@ Search & filter
 
 Recent activities tab
 
+REST API using Django REST Framework
+
 # Demo Images
 #### Home
 ![image](https://user-images.githubusercontent.com/91414168/147417596-f6dca3f1-a7e2-40df-9129-9e2488c0e755.png)
