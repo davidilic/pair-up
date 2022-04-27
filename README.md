@@ -31,7 +31,7 @@ REST API using Django REST Framework
 
 # Deployment
 Site is deployed on [here](https://pair-up--project.herokuapp.com/).
-Images do not work as the host doesn't save images.
+Dynamic mages do not work as the host doesn't save dynamic images.
 
 # How to run
 After cloning the repo:
